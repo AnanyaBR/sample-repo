@@ -19,20 +19,28 @@ componentDidMount(){
 axios.get('https://jsonplaceholder.typicode.com/posts/'+id)
 .then((response)=>{
     const post = response.data
-    this.setState({post})
+    this.setState({post},()=>{
+        axios.get('https://jsonplaceholder.typicode.com/users/'+this.state.post.userId)
+        .then((response1)=>{
+            const user = response1.data
+            this.setState({user})
+        })
+    })
 })
+
+
 .catch((err)=>{
     console.log(err)
 })
 
-setInterval(() => {
-    axios.get('https://jsonplaceholder.typicode.com/users/'+this.state.post.userId)
-.then((response1)=>{
-    const user = response1.data
-    this.setState({user})
-})
+// setInterval(() => {
+//     axios.get('https://jsonplaceholder.typicode.com/users/'+this.state.post.userId)
+// .then((response1)=>{
+//     const user = response1.data
+//     this.setState({user})
+// })
     
-}, 2000);
+// }, 2000);
 
 axios.get ('https://jsonplaceholder.typicode.com/comments?postId='+id)
 .then((response2)=>{

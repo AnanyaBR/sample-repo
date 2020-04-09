@@ -1,34 +1,26 @@
 import React from 'react'
-import axios from 'axios'
+import {connect} from 'react-redux'
+
 import {Link} from 'react-router-dom'
+import { startGetUsers } from './actions/usersAction'
 
 class UsersList extends React.Component{
-    constructor(){
-        super()
-        this.state ={
-            users :[]
-        }
+componentDidMount(){
+    if(this.props.users.length === 0){
+        this.props.dispatch(startGetUsers())
     }
-
-    componentDidMount(){
-axios.get('https://jsonplaceholder.typicode.com/users')
-.then((response)=>{
-    const users = response.data
-this.setState({users})
-})
-.catch((err)=>{
-    console.log(err)
-})
-    }
+}
+    
+   
 
     render(){
         //console.log(this.state.users)
         return(
             <div>
-                <h1>Listing Users -{this.state.users.length}</h1>
+                <h1>Listing Users -{this.props.users.length}</h1>
                 <ul>
                     {
-                        this.state.users.map(user=>{
+                        this.props.users.map(user=>{
                         return <li key={user.id}><Link to={`/users/${user.id}`}>{user.name}</Link></li>
                         })
                     }
@@ -38,4 +30,28 @@ this.setState({users})
     }
 }
 
-export default UsersList
+const mapStateToProps = (state)=>{
+    return{
+        users: state.users
+    }
+}
+
+export default connect(mapStateToProps)(UsersList)
+
+ // constructor(){
+    //     super()
+    //     this.state ={
+    //         users :[]
+    //     }
+    // }
+
+//     componentDidMount(){
+// axios.get('https://jsonplaceholder.typicode.com/users')
+// .then((response)=>{
+//     const users = response.data
+// this.setState({users})
+// })
+// .catch((err)=>{
+//     console.log(err)
+// })
+//     }
